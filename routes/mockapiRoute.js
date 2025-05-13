@@ -9,16 +9,28 @@ router.post("/create", tokenAuth, async (req, res) => {
   try {
     const { resourceName, endpoints } = req.body;
 
-    const newMock = new MockAPI({ userId: req.user._id, resourceName, endpoints });
+    const newMock = new MockAPI({
+      userId: req.user._id,
+      resources: [
+        {
+          resourceName,
+          endpoints
+        }
+      ]
+    });
+
     await User.findByIdAndUpdate(req.user._id, {
       $push: { mockAPIs: newMock._id }
     });
+
     await newMock.save();
+
     res.status(201).json({ message: "Mock API created", mock: newMock });
   } catch (err) {
     res.status(400).json({ message: "Creation failed", error: err.message });
   }
 });
+
 
 // 🔹 Get all mock APIs of the user
 router.get("/my-mocks", tokenAuth, async (req, res) => {
