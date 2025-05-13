@@ -1,0 +1,142 @@
+[
+  {
+   "name": "Wireless Mouse",
+  "price": 25.99,
+  "description": "A high-quality wireless mouse with ergonomic design.",
+  "category": "Electronics",
+  "productImage":"https://i.ibb.co/3MJRw5d/wireless-mouse.jpg"
+},
+{
+  "name": "Bluetooth Headphones",
+  "price": 89.99,
+  "description": "Noise-cancelling Bluetooth headphones with long battery life.",
+  "category": "Electronics",
+  "productImage":"https://i.ibb.co/FnyS12x/Bluetooth-Headphones.jpg"
+},
+{
+  "name": "Laptop Stand",
+  "price": 35.5,
+  "description": "A sleek and adjustable laptop stand for ergonomic working.",
+  "category": "Electronics",
+  "productImage":"https://i.ibb.co/y83xfbc/Laptop-Stand.jpg"
+},
+{
+  "name": "Smartwatch",
+  "price": 129.99,
+  "description": "A smartwatch with fitness tracking and heart rate monitoring.",
+  "category": "Electronics",
+  "productImage":"https://i.ibb.co/M5mKWSx/Smartwatch.jpg"
+},  
+{
+  "name": "Desk Organizer",
+  "price": 19.99,
+  "description": "A wooden desk organizer with multiple compartments for stationery.",
+  "category": "Office_Supplies",
+  "productImage":"https://i.ibb.co/gPFpmpS/Desk-Organizer-Office-Supplies.jpg"
+},
+{
+  "name": "Pen Set",
+  "price": 12.99,
+  "description": "A set of pencils, pens, and markers for writing and drawing.",
+  "category": "Office_Supplies",
+  "productImage":"https://i.ibb.co/BNH7zxj/Pen-Set.jpg"
+},
+{
+  "name": "Printer",
+  "price": 79.99,
+  "description": "A high-quality printer for printing documents and photos.",
+  "category": "Office_Supplies",
+  "productImage":"https://i.ibb.co/QKJgRDr/Printer.jpg"
+},
+{
+  "name": "Calculator",
+  "price": 9.99,
+  "description": "A portable calculator for quick calculations.",
+  "category": "Office_Supplies",
+  "productImage":"https://i.ibb.co/6yLsfSj/Calculator.jpg"
+},
+{
+  "name": "T-Shirt",
+  "price": 19.99,
+  "description": "A comfortable and stylish t-shirt for casual wear.",
+  "category": "Clothing",
+  "productImage":"https://i.ibb.co/G7Dn6kZ/T-Shirt.jpg"
+},
+{
+  "name": "Jeans",
+  "price": 59.99,
+  "description": "Comfortable and stylish jeans for everyday wear.",
+  "category": "Clothing",
+  "productImage":"https://i.ibb.co/DVmykyK/Jeans.jpg"
+},
+{
+  "name": "Sneakers",
+  "price": 79.99,
+  "description": "Stylish and comfortable sneakers for active lifestyle.",
+  "category": "Clothing",
+  "productImage":"https://i.ibb.co/4jVkwkX/Sneakers.jpg"
+},
+{
+  "name": "Jacket",
+  "price": 49.99,
+  "description": "Warm and stylish jacket for cold weather.", 
+  "category": "Clothing",
+  "productImage":"https://i.ibb.co/d68mgvh/Jacket.jpg"
+},
+{
+  "name": "Running Shoes",
+  "price": 59.99,
+  "description": "Comfortable running shoes for everyday use.",
+  "category": "Footwear",
+  "productImage":"https://i.ibb.co/ZmRC0x8/Running-Shoes.jpg"
+},
+{
+  "name": "Leather Boots",
+  "price": 89.99,
+  "description": "Durable leather boots perfect for hiking.",
+  "category": "Footwear",
+  "productImage":"https://i.ibb.co/cF3Jwpz/Leather-Boots.jpg"
+},
+{
+  "name": "Sandals",
+  "price": 29.99,
+  "description": "Lightweight sandals for summer outings.",
+  "category": "Footwear",
+  "productImage":"https://i.ibb.co/Nr3MSWm/Sandals.jpg"
+},
+{
+  "name": "Formal Shoes",
+  "price": 79.99,
+  "description": "Elegant formal shoes for business meetings.",
+  "category": "Footwear",
+  "productImage":"https://i.ibb.co/wS238jP/Formal-Shoes.jpg"
+},
+{
+  "name": "Wristwatch",
+  "price": 120.00,
+  "description": "Stylish wristwatch with a leather strap.",
+  "category": "Accessories",
+  "productImage":"https://i.ibb.co/ZXy8DX7/Wristwatch.jpg"
+},
+{
+  "name": "Sunglasses",
+  "price": 49.99,
+  "description": "Polarized sunglasses for UV protection.",
+  "category": "Accessories",
+  "productImage":"https://i.ibb.co/MfpFy6J/Sunglasses.jpg"
+},
+{
+  "name": "Backpack",
+  "price": 59.99,
+  "description": "Spacious backpack suitable for travel.",
+  "category": "Accessories",
+  "productImage":"https://i.ibb.co/dQqjNVm/Backpack.jpg"
+},
+{
+  "name": "Belt",
+  "price": 34.99,
+  "description": "Classic leather belt for formal attire.",
+  "category": "Accessories",
+  "productImage":"https://i.ibb.co/FbmPLNr/Belt.jpg"
+}
+]
