@@ -4,112 +4,128 @@ const tokenAuth = require("../middleware/tokenAuth");
 const MockAPI = require("../model/mockapiModel");
 const User = require("../model/userModel");
 
-// 🔹 Create a new MockAPI
-router.post("/create", tokenAuth, async (req, res) => {
-  try {
-    const { resourceName, endpoints } = req.body;
+const auth = tokenAuth;
 
-    const newMock = new MockAPI({
+// Create a Resource with end points + Add a new resource for the same user
+
+// router.post('/resources', auth, async (req, res) => {
+//   try {
+//     const { resourceName, endpoints = [] } = req.body;
+
+//     // Step 1: Check if MockAPI exists for the user
+//     let existingMockAPI = await MockAPI.findOne({ userId: req.user._id });
+
+//     // Step 2: If no MockAPI exists, create one
+//     if (!existingMockAPI) {
+//       const newMockAPI = new MockAPI({
+//         userId: req.user._id,
+//         resources: [{
+//           resourceName,
+//           endpoints
+//         }]
+//       });
+
+//       const savedResource = await newMockAPI.save();
+
+//       // Link MockAPI ID to user's mockAPIs array
+//       await User.findByIdAndUpdate(
+//         req.user._id,
+//         { $push: { mockAPIs: savedResource._id } },
+//         { new: true }
+//       );
+
+//       return res.status(201).json(savedResource);
+//     }
+
+//     // Step 3: If MockAPI exists, check for duplicate resource
+//     const duplicate = existingMockAPI.resources.find(
+//       resource => resource.resourceName === resourceName
+//     );
+
+//     if (duplicate) {
+//       return res.status(400).json({ message: 'Resource with the same name already exists.' });
+//     }
+
+//     // Step 4: Add the new resource
+//     existingMockAPI.resources.push({ resourceName, endpoints });
+//     const updatedMockAPI = await existingMockAPI.save();
+
+//     return res.status(201).json(updatedMockAPI);
+//   } catch (error) {
+//     return res.status(400).json({ message: error.message });
+//   }
+// });
+
+
+router.post('/resources', auth, async (req, res) => {
+  try {
+    const { resourceName, endpoints = [] } = req.body;
+
+    // Check if this user already has a MockAPI with the same resource
+    const existing = await MockAPI.findOne({
       userId: req.user._id,
-      resources: [
-        {
-          resourceName,
-          endpoints
-        }
-      ]
+      'resources.resourceName': resourceName
     });
 
-    await User.findByIdAndUpdate(req.user._id, {
-      $push: { mockAPIs: newMock._id }
-    });
-
-    await newMock.save();
-
-    res.status(201).json({ message: "Mock API created", mock: newMock });
-  } catch (err) {
-    res.status(400).json({ message: "Creation failed", error: err.message });
-  }
-});
-
-
-// 🔹 Get all mock APIs of the user
-router.get("/my-mocks", tokenAuth, async (req, res) => {
-  console.log(req.user._id)
-// populate()
- const mocks = await MockAPI.find({ userId: req.user._id }).populate('endpoints'); // populate specific fields
-  res.status(200).json(mocks);
-});
-
-
-// 🔹 Get single mock API
-router.get("/resource/:mockId", tokenAuth, async (req, res) => {
-  console.log(req.params.mockId)
-  const mock = await MockAPI.findOne({ _id: req.params.mockId, userId: req.user._id });
-  if (!mock) return res.status(404).json({ message: "Not found" });
-  res.json(mock);
-});
-
-// 🔹 Add new endpoint to existing mock
-router.post("/resources/endpoints/:mockId", tokenAuth, async (req, res) => {
-  try {
-    const { endpoints } = req.body;
-
-    // Validate input
-    if (!Array.isArray(endpoints) || endpoints.length === 0) {
-      return res.status(400).json({ message: "Endpoints array is required and cannot be empty" });
+    if (existing) {
+      return res.status(400).json({ message: 'Resource with this name already exists.' });
     }
 
-    // Find the existing mock by ID and user
-    const mock = await MockAPI.findOne({
-      _id: req.params.mockId,
-      userId: req.user._id
+    // Create a new MockAPI document with this single resource
+    const newMockAPI = new MockAPI({
+      userId: req.user._id,
+      resources: [{ resourceName, endpoints }]
     });
 
-    if (!mock) return res.status(404).json({ message: "Mock not found" });
+    const saved = await newMockAPI.save();
 
-    // Push the new endpoints
-    mock.endpoints.push(...endpoints);
+    // Optionally link this new mockAPI to the User's mockAPIs array
+    await User.findByIdAndUpdate(
+      req.user._id,
+      { $push: { mockAPIs: saved._id } }
+    );
 
-    await mock.save();
+    res.status(201).json(saved);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
 
-    res.json({ message: "Endpoint(s) added successfully", mock });
-  } catch (err) {
-    console.error("Error adding endpoints:", err);
-    res.status(500).json({ message: "Internal Server Error" });
+// Add another endpoints to the existing resource
+// POST /resources/:resourceId/endpoints
+router.post('/resources/:resourceId/endpoints', auth, async (req, res) => {
+  try {
+    const { method, urlpath, description = 'No description provided.', response, statusCode = 200 } = req.body;
+
+    const mockAPI = await MockAPI.findOne({
+      userId: req.user._id,
+     _id: req.params.resourceId
+    });
+
+    console.log(mockAPI,req.params.resourceId,req.user._id);
+
+    if (!mockAPI) {
+      return res.status(404).json({ message: 'Resource not found.' });
+    }
+
+    const resource = mockAPI.resources.id(req.params.resourceId);
+
+    if (!resource) {
+      return res.status(404).json({ message: 'Resource not found in mock API.' });
+    }
+
+    resource.endpoints.push({ method, urlpath, description, response, statusCode });
+
+    await mockAPI.save();
+
+    res.status(200).json({ message: 'Endpoint added successfully.', resource });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 
 
-// 🔹 Update specific endpoint by index
-router.put("/:mockId/endpoints/:index", tokenAuth, async (req, res) => {
-  const { method, urlpath, response } = req.body;
-  const mock = await MockAPI.findOne({ _id: req.params.mockId, user: req.user._id });
-  if (!mock) return res.status(404).json({ message: "Mock not found" });
 
-  if (!mock.endpoints[req.params.index]) return res.status(404).json({ message: "Endpoint not found" });
 
-  mock.endpoints[req.params.index] = { method, urlpath, response };
-  await mock.save();
-  res.json({ message: "Endpoint updated", mock });
-});
-
-// 🔹 Delete an endpoint by index
-router.delete("/:mockId/endpoints/:index", tokenAuth, async (req, res) => {
-  const mock = await MockAPI.findOne({ _id: req.params.mockId, user: req.user._id });
-  if (!mock) return res.status(404).json({ message: "Mock not found" });
-
-  if (mock.endpoints.length <= req.params.index) return res.status(400).json({ message: "Invalid index" });
-
-  mock.endpoints.splice(req.params.index, 1);
-  await mock.save();
-  res.json({ message: "Endpoint deleted", mock });
-});
-
-// 🔹 Delete entire mock API
-router.delete("/:mockId", tokenAuth, async (req, res) => {
-  const mock = await MockAPI.findOneAndDelete({ _id: req.params.mockId, user: req.user._id });
-  if (!mock) return res.status(404).json({ message: "Mock not found" });
-  res.json({ message: "Mock deleted" });
-});
 
 module.exports = router;
